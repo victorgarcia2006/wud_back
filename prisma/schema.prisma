@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model usuario {
+  email String @id @unique
+  password String
+  nombre String 
+  pApellido String
+  sApellido String
+  mascota mascota? @relation("UsuarioMascota")
+}
+
+model mascota {
+  id String @id @unique
+  peso Float 
+  raza String @unique
+  idRaza razas @relation("RazasMascota", fields: [raza], references: [id_raza])
+  edad Int
+  nombre String
+  emailDueno String @unique
+  dueno usuario @relation("UsuarioMascota", fields: [emailDueno], references: [email]) 
+  horarios horarios? @relation("HorariosMascota")
+}
+
+model horarios {
+  id_mascota String @id @unique
+  mascota mascota @relation("HorariosMascota",fields: [id_mascota], references: [id])
+  fechahora Float @unique
+  cantidad Float 
+}
+
+model razas {
+  id_raza String @id @unique
+  nombreRaza String
+  mascota mascota? @relation("RazasMascota")
+}
